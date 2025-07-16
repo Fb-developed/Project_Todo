@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тасдиқи Несткунӣ</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Тасдиқи Несткунӣ</h1>
+        <p>Оё шумо мутмаин ҳастед, ки мехоҳед вазифаи "{{ task.title }}"-ро нест кунед?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="delete-button">Нест кардан</button>
+            <a href="{% url 'task_list' %}" class="back-link">Бекор кардан</a>
+        </form>
+    </div>
+</body>
+</html>

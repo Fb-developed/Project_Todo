@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TODO List</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Tasks</h1>
+        <p>hello, {{ user.username }}!
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" style="background: none; border: none; color: #007bff; cursor: pointer; padding: 0; font-size: inherit; text-decoration: underline;">logout</button>
+            </form>
+        </p>
+
+        <form method="GET" action="{% url 'task_list' %}" class="search-form">
+            <input type="text" name="q" placeholder="search task..." value="{{ query|default_if_none:'' }}">
+
+            <select name="status">
+                <option value="">all status</option>
+                <option value="not_completed" {% if status == 'not_completed' %}selected{% endif %}>proceses</option>
+                <option value="completed" {% if status == 'completed' %}selected{% endif %}>completed</option>
+            </select>
+
+            <input type="date" name="due_date" value="{{ due_date|default_if_none:'' }}">
+
+            <button type="submit">Search</button>
+            <a href="{% url 'task_list' %}" class="reset-search">Clear</a> </form>
+
+        <a href="{% url 'task_create' %}" class="add-button">Create task</a>
+
+        {% if tasks %}
+            <ul class="task-list">
+                {% for task in tasks %}
+                    <li class="task-item {% if task.is_completed %}completed{% endif %}">
+                        <h3>{{ task.title }}</h3>
+                        {% if task.description %}
+                            <p>{{ task.description }}</p>
+                        {% endif %}
+                        <p>Due_data: {{ task.due_date|default_if_none:"Надорад" }}</p>
+                        <p>Status: {% if task.is_completed %}completed{% else %}proceses{% endif %}</p>
+                        <div class="task-actions">
+                            <a href="{% url 'task_update' task.pk %}" class="edit-button">edit</a>
+                            <a href="{% url 'task_delete' task.pk %}" class="delete-button">delete</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Not foun task.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
